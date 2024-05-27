@@ -3,17 +3,11 @@ import Todo from './Todo';
 import TodoInsert from './TodoInsert';
 import S from './style';
 
-// const getTodos = async () => {
-//     // 데이터 가져오기
-//     const response = await fetch('http://localhost:4000/todo');
-//     const datas = await response.json();
-//     return datas;
-// };
-
 const TodoContainer = () => {
 
     const [ todos , setTodos ] = useState([]);
     const [ error, setError ] = useState(false); 
+    const [ isTodoUpdate, setIsTodoUpdate ] = useState(false)
 
     const getTodos = async () => {
       try {
@@ -28,14 +22,14 @@ const TodoContainer = () => {
 
     useEffect(() => {
         getTodos();
-    }, []); 
+    }, [isTodoUpdate]); 
 
     return (
         <div>
-            <TodoInsert getTodos={getTodos} todos={todos}/>
-            {<S.SubTitle>남은 할일: 🙂 <span>{todos.length}</span></S.SubTitle>}
-            {todos.map( (todo, i) => (
-                  <Todo key={i} todo={todo} getTodos={getTodos} /> 
+            <TodoInsert todos={todos} isTodoUpdate={isTodoUpdate} setIsTodoUpdate={setIsTodoUpdate} />
+            {<S.SubTitle>남은 할일: 🙂 <span>{todos && todos.length}</span></S.SubTitle>}
+            {todos && todos.map((todo, i) => (
+                  <Todo key={i} todo={todo} isTodoUpdate={isTodoUpdate} setIsTodoUpdate={setIsTodoUpdate} /> 
             ))}
         </div>
     );

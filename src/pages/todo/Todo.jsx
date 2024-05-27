@@ -5,7 +5,7 @@ import { faPen, faTrash, faCheck, faX} from '@fortawesome/free-solid-svg-icons';
 import useInput from '../../hooks/useInput';
 
 
-const Todo = ({todo, getTodos}) => {
+const Todo = ({todo, isTodoUpdate, setIsTodoUpdate}) => {
     // 비구조화 할당
     const {id, title} = todo;
 
@@ -16,8 +16,6 @@ const Todo = ({todo, getTodos}) => {
     const handleIsEdit = () => {
         setisEdit(!isEdit)
     }
-    console.log(isEdit)
-
 
     // CRUD
     // 수정 
@@ -50,9 +48,8 @@ const Todo = ({todo, getTodos}) => {
                 method : 'DELETE',
             }).then((response) => {
                 console.log('리스폰스 받기', response)
-                if(response.ok){
-                  getTodos()
-                }
+                if(!response.ok) return console.log(`Error ${response}`)
+                    setIsTodoUpdate(!isTodoUpdate)
             })
         }
     }
@@ -73,8 +70,8 @@ const Todo = ({todo, getTodos}) => {
         }).then( (response) => {
             console.log('리스폰스',response)
             if(!response.ok) return console.log(`Error ${response}`)
-            getTodos();
             setisEdit(false)
+            setIsTodoUpdate(!isTodoUpdate)
         }
         )
     }

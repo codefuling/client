@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import S from './style';
 import useInput from '../../hooks/useInput';
 
-const TodoInsert = ({getTodos, todos}) => {
+const TodoInsert = ({todos, isTodoUpdate, setIsTodoUpdate}) => {
     const [value, onChange, setValue] = useInput("")
 
     // 추가 POST
@@ -25,8 +25,8 @@ const TodoInsert = ({getTodos, todos}) => {
             }).then( (response) => {
                 console.log('리스폰스',response)
                 if(!response.ok) return console.log(`Error ${response}`)
-                getTodos();
                 setValue("")
+                setIsTodoUpdate(!isTodoUpdate)
             }
             )
         }
