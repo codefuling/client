@@ -11,13 +11,12 @@ const TodoInsert = ({todos, isTodoUpdate, setIsTodoUpdate}) => {
         console.log(value)
         if(e.key === 'Enter'){ 
             if(!window.confirm('이대로 추가 하시겠습니까?')) return;
-            fetch('http://localhost:4000/todo/', {
+            fetch('http://localhost:8000/todo/insertTodo/', {
                 method : 'POST',
                 headers : {
                     'Content-Type' : 'application/json'
                 },
                 body : JSON.stringify({
-                    id : (todos.length + 1).toString(),
                     title : value,
                     isChecked : false
                 })

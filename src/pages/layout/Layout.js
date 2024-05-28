@@ -24,24 +24,23 @@ const Layout = () => {
     const [isLogin, setIsLogin] = useState(false);
     
     useEffect(()=>{
-        const getLoginState = async () => {
-        await fetch('http://localhost:4001/login/success', {
-        method : 'GET',
-        credentials: 'include'
-        }).then(async (res) => {
-            const user = await res.json();
-            if(res.ok){
-                console.log(user);
-                dispatch(setUser(user));
-                dispatch(setUserStatus(true));
-                setIsLogin(true)
-                return;
-            }else{
-                return;
-            }
-        })
-        }
-        getLoginState()
+        // const getLoginState = async () => {
+        // await fetch('http://localhost:4001/login/success', {
+        // method : 'GET',
+        // }).then(async (res) => {
+        //     const user = await res.json();
+        //     if(res.ok){
+        //         console.log(user);
+        //         dispatch(setUser(user));
+        //         dispatch(setUserStatus(true));
+        //         setIsLogin(true)
+        //         return;
+        //     }else{
+        //         return;
+        //     }
+        // })
+        // }
+        // getLoginState()
     }, [isLogin])
 
     return (

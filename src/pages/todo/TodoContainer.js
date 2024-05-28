@@ -12,7 +12,7 @@ const TodoContainer = () => {
     const getTodos = async () => {
       try {
         // 데이터 가져오기
-        const response = await fetch('http://localhost:4000/todo');
+        const response = await fetch('http://localhost:8000/todo/selectTodo/');
         const datas = await response.json();
         setTodos(datas);
       } catch (err) {

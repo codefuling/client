@@ -7,7 +7,8 @@ import useInput from '../../hooks/useInput';
 
 const Todo = ({todo, isTodoUpdate, setIsTodoUpdate}) => {
     // 비구조화 할당
-    const {id, title} = todo;
+    console.log(todo)
+    const { title } = todo;
 
     // 타이틀 수정
     const [isEdit, setisEdit] = useState(false);
@@ -21,9 +22,9 @@ const Todo = ({todo, isTodoUpdate, setIsTodoUpdate}) => {
     // 수정 
     // 체크 상태관리
     const [ isChecked, setIsChecked ] = useState(todo.isChecked)
-    const handleChecked = () => {
+    const handleChecked = async () => {
         // setIsChecked(!isChecked)
-        fetch(`http://localhost:4000/todo/${id}`, {
+        await fetch(`http://localhost:8000/todo/modifyTodo`, {
             method : 'PUT',
             headers : {
                 'Content-Type' : 'application/json'
@@ -42,23 +43,29 @@ const Todo = ({todo, isTodoUpdate, setIsTodoUpdate}) => {
 
     // 삭제
     // 투두리스트 삭제
-    const handleRemoveTodo = () => {
+    const handleRemoveTodo = async () => {
         if(window.confirm('삭제 하시겠습니까?')){
-            fetch(`http://localhost:4000/todo/${id}`,{
+           await fetch(`http://localhost:8000/todo/deleteTodo`,{
                 method : 'DELETE',
+                headers : {
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify({
+                    ...todo,
+                })
             }).then((response) => {
                 console.log('리스폰스 받기', response)
                 if(!response.ok) return console.log(`Error ${response}`)
-                    setIsTodoUpdate(!isTodoUpdate)
+                setIsTodoUpdate(!isTodoUpdate)
             })
         }
     }
 
     // 수정
     // 타이틀 수정
-    const onChangeInsertTodo = () => {
+    const onChangeInsertTodo = async () => {
         // setIsChecked(!isChecked)
-        fetch(`http://localhost:4000/todo/${id}`, {
+        await fetch(`http://localhost:8000/todo/modifyTodo`, {
             method : 'PUT',
             headers : {
                 'Content-Type' : 'application/json'
