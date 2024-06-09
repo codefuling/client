@@ -19,30 +19,7 @@ const Layout = () => {
     if(path !== "/my"){
         dispatch(setPreviousUrl(path))
     }
-
-    // 앱이 실행되었을 때 로그인 상태를 확인한다.
-    const [isLogin, setIsLogin] = useState(false);
     
-    useEffect(()=>{
-        // const getLoginState = async () => {
-        // await fetch('http://localhost:4001/login/success', {
-        // method : 'GET',
-        // }).then(async (res) => {
-        //     const user = await res.json();
-        //     if(res.ok){
-        //         console.log(user);
-        //         dispatch(setUser(user));
-        //         dispatch(setUserStatus(true));
-        //         setIsLogin(true)
-        //         return;
-        //     }else{
-        //         return;
-        //     }
-        // })
-        // }
-        // getLoginState()
-    }, [isLogin])
-
     return (
         <S.Background>
             <S.Wrapper>

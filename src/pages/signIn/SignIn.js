@@ -25,30 +25,45 @@ const SignIn = () => {
     // 로그인에 성공해서 리랜더링 시켜줘야한다.
     if(userStatus){
         return (
-            <div>{curruentUser.user_id}님 환영합니다.</div>
+            <div>{curruentUser.email}님 환영합니다.</div>
         )
     }
 
     return (
         <S.Form onSubmit={handleSubmit(async (data) => {
-            // console.log(data)
-            await fetch('http://localhost:4001/login', {
+            
+            // 로그인 로직 
+            console.log(data)
+            await fetch('http://localhost:8000/user/passportLogin', {
                 method : 'POST',
                 headers : {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
                 },
                 body : JSON.stringify({
-                    id : data.email,
+                    email : data.email,
                     password : data.password
-                }),
-                credentials: 'include'
+                })
             })
             .then(res => res.json())
-            .then(res => {
+            .then((res) => {
+                console.log(res)
+                let {token, ...user} = res;
+                dispatch(setUser(user))
                 dispatch(setUserStatus(true))
-                dispatch(setUser(res))
+                localStorage.setItem("token", res.token);
             })
+            .catch(console.error)
+
+            // 로그인 후 접속하는 페이지들은 토큰을 심어서 접근
+            // await fetch('http://localhost:8000/user/auth', {
+            //     method : 'POST',
+            //     headers : {
+            //         'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            //     }
+            // })
+            // .then((res) => res.json())
+            // .then(console.log)
+            // .catch()
 
             })}>
 

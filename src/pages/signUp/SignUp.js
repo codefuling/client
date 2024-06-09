@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
 import Input from '../../components/input/style';
 import { useForm } from 'react-hook-form'
 import BasicButton from '../../components/button/BasicButton';
@@ -7,6 +8,7 @@ import S from './style';
 // 리엑트 use-hook-form
 const SignUp = () => {
 
+    const navigate = useNavigate();
     const { register, handleSubmit, getValues, formState: {isSubmitting, isSubmitted, errors}} = useForm({ mode: "onChange" });
 
     //[] 바깥 ^는 문자열 처음을 의미
@@ -17,26 +19,31 @@ const SignUp = () => {
     return (
         <S.Form onSubmit={handleSubmit(async (data)=>{
 
-              // console.log(data)
-             await fetch('http://localhost:4001/signUp', {
+             console.log(data)
+             await fetch('http://localhost:8000/user/register', {
                 method : 'POST',
                 headers : {
                     'Content-Type': 'application/json'
                 },
                 body : JSON.stringify({
-                    id : data.email,
+                    email : data.email,
                     password : data.password
-                }),
-                credentials: 'include'
+                })
             })
             .then(res => res.json())
-            .then(res => console.log(res))
+            .then(res => {
+                if(res.registerSuccess){
+                    alert(res.message)
+                }
+                // 리다이렉트
+                navigate('/signIn')
+            })
 
         })}>
 
             <S.Label htmlFor="email">
                 <S.Title>이메일</S.Title>
-                //BasicInput으로 하면 ref 오류가 생긴다.
+                {/* BasicInput으로 하면 ref 오류가 생긴다. */}
                 <Input size={"full"} shape={"small"} variant={"black"} color={"black"}
                     id="email" 
                     type="text"

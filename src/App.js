@@ -6,25 +6,52 @@ import GlobalStyle from './global/global';
 import { ThemeProvider } from 'styled-components';
 import theme from './global/theme';
 
-import { legacy_createStore as createStore } from 'redux';
-import { Provider } from 'react-redux';
-import { devToolsEnhancer } from '@redux-devtools/extension';
-import rootReducer from './modules';
-const store = createStore(rootReducer, devToolsEnhancer())
-
-// 값 두개를 확인
-// console.log('store.getState', store.getState());
+import { useEffect } from 'react';
+import { setUser, setUserStatus } from './modules/user';
+import { useDispatch, useSelector } from 'react-redux';
 
 function App() {
+
+  // 값 두개를 확인
+  // console.log('store.getState', store.getState());
+  // 최초 한 번 인가 로그인 확인 후 자동 로그인, 
+  // 인증 만료 401 코드 인경우 함수 종료
+  const curruentUser = useSelector((state) => state.user.curruentUser);
+  const userStatus = useSelector((state) => state.user.isLogin);
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const isAuthenticate = async () => {
+      const response = await fetch('http://localhost:8000/user/auth', {
+        method : 'POST',
+        headers : {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
+      if(!response.ok) {
+        return
+      }
+      const getAuthenticate = await response.json()
+      return getAuthenticate;
+    }
+
+    isAuthenticate()
+      .then((res) => {
+        console.log(res)
+        let {message, ...user} = res;
+        dispatch(setUser(user))
+        dispatch(setUserStatus(true))
+      })
+      .catch(console.error)
+  }, [])
+  
   return (
     <>
-      <Provider store={store}>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />
           <GlobalStyle />
         </ThemeProvider>
-      </Provider>
-   </>
+    </>
   );
 }
 

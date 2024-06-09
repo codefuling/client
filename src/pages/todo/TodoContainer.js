@@ -8,7 +8,8 @@ const TodoContainer = () => {
     const [ todos , setTodos ] = useState([]);
     const [ error, setError ] = useState(false); 
     const [ isTodoUpdate, setIsTodoUpdate ] = useState(false)
-
+    const accessToken = localStorage.getItem('accessToken')
+    
     const getTodos = async () => {
       try {
         // 데이터 가져오기
