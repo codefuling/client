@@ -37,8 +37,8 @@ function App() {
 
     isAuthenticate()
       .then((res) => {
-        console.log(res)
-        let {message, ...user} = res;
+        console.log('마운트', res)
+        let {message, user} = res;
         dispatch(setUser(user))
         dispatch(setUserStatus(true))
       })

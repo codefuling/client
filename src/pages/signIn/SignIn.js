@@ -34,7 +34,7 @@ const SignIn = () => {
             
             // 로그인 로직 
             console.log(data)
-            await fetch('http://localhost:8000/user/passportLogin', {
+            await fetch('http://localhost:8000/user/login', {
                 method : 'POST',
                 headers : {
                     'Content-Type': 'application/json',
@@ -46,8 +46,7 @@ const SignIn = () => {
             })
             .then(res => res.json())
             .then((res) => {
-                console.log(res)
-                let {token, ...user} = res;
+                let {token, user} = res;
                 dispatch(setUser(user))
                 dispatch(setUserStatus(true))
                 localStorage.setItem("token", res.token);
