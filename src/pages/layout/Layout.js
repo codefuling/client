@@ -16,9 +16,12 @@ const Layout = () => {
     console.log(path)
 
     // /my?login="true" 입력시 로그인할 수 있게 처리 눈으로만
-    if(path !== "/my"){
-        dispatch(setPreviousUrl(path))
-    }
+    useEffect(() => {
+        // My 페이지가 아닌 경우에만 이전 경로를 저장
+        if (path !== "/my") {
+            dispatch(setPreviousUrl(path));
+        }
+    }, [path, dispatch]);
     
     return (
         <S.Background>

@@ -12,7 +12,7 @@ const SignUp = () => {
     const { register, handleSubmit, getValues, formState: {isSubmitting, isSubmitted, errors}} = useForm({ mode: "onChange" });
 
     //[] 바깥 ^는 문자열 처음을 의미
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
 
 

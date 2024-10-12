@@ -13,7 +13,7 @@ const SignIn = () => {
     const { register, handleSubmit, getValues, formState: {isSubmiitng, isSubmitted, errors}} = useForm({ mode: "onChange" });
 
     //[] 바깥 ^는 문자열 처음을 의미
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
 
     // 로그인 이후에 보여줘야할 때
@@ -34,7 +34,7 @@ const SignIn = () => {
             
             // 로그인 로직 
             console.log(data)
-            await fetch('http://localhost:8000/user/login', {
+            await fetch('http://localhost:8000/auth/local', {
                 method : 'POST',
                 headers : {
                     'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const SignIn = () => {
             .catch(console.error)
 
             // 로그인 후 접속하는 페이지들은 토큰을 심어서 접근
-            // await fetch('http://localhost:8000/user/auth', {
+            // await fetch('http://localhost:8000/auth/local', {
             //     method : 'POST',
             //     headers : {
             //         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -112,6 +112,15 @@ const SignIn = () => {
             <BasicButton size={"full"} shape={"small"} variant={"black"} color={"white"}
              disabled={isSubmiitng}>로그인</BasicButton>
             <Link to="/signUp"><S.SubTitle>투두 페이지가 처음이신가요?</S.SubTitle></Link>
+            <div>
+                <a href="http://localhost:8000/auth/google">구글 로그인</a>
+            </div>
+            <div>
+                <a href="http://localhost:8000/auth/kakao">카카오 로그인</a>
+            </div>
+            <div>
+                <a href="http://localhost:8000/auth/naver">네이버 로그인</a>
+            </div>
         </S.Form>
     );
 };
