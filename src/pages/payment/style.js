@@ -43,7 +43,7 @@ S.Modal = styled.div`
 S.ModalBg = styled.div`
   position: fixed;
   width: 100dvw;
-  height: 100dvh;
+  height: 100dvh; //최근 브라우저들은 뷰포트 높이를 더 정확하게 계산할 수 있는 dvh(dynamic viewport height)
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.3);
