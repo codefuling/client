@@ -46,10 +46,10 @@ const SignIn = () => {
             })
             .then(res => res.json())
             .then((res) => {
-                let {token, user} = res;
+                let {accessToken, user} = res;
                 dispatch(setUser(user))
                 dispatch(setUserStatus(true))
-                localStorage.setItem("token", res.token);
+                localStorage.setItem("accessToken", res.accessToken);
             })
             .catch(console.error)
 

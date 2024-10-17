@@ -7,6 +7,10 @@ import MyPage from "../pages/myPage/MyPage";
 import SignIn from "../pages/signIn/SignIn";
 import SignUp from "../pages/signUp/SignUp";
 import PageNotFound from "../pages/error/PageNotFound";
+import Detail from "../pages/payment/Detail";
+import Success from "../pages/payment/Success";
+import Failed from "../pages/payment/Failed";
+import PaymentContrainer from "../pages/payment/PaymentContrainer";
 
 
 const router = createBrowserRouter([
@@ -29,6 +33,24 @@ const router = createBrowserRouter([
             {
                 path: '/signUp',
                 element: <SignUp />
+            },
+            {
+                path: '/payment',
+                element: <PaymentContrainer />,  // 부모 컴포넌트
+                children: [
+                    {
+                        index: true,  // 기본 경로일 때 Detail 보여줌
+                        element: <Detail />
+                    },
+                    {
+                        path: 'success',
+                        element: <Success />
+                    },
+                    {
+                        path: 'failed',
+                        element: <Failed />
+                    },
+                ]
             }
         ]
     },
