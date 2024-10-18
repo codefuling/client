@@ -22,13 +22,13 @@ function App() {
 
   
     useEffect(() => {
-      if(localStorage.getItem('token')){
+      if(localStorage.getItem('accessToken')){
 
         const isAuthenticate = async () => {
           const response = await fetch('http://localhost:8000/auth/jwt', {
             method : 'POST',
             headers : {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             }
           })
           if(!response.ok) {

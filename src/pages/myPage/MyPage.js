@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { setUser, setUserStatus } from '../../modules/user';
 import S from './style';
 
@@ -11,54 +11,42 @@ const MyPage = () => {
     const previousUrl = useSelector((state) => state.user.previousUrl );
     const curruentUser = useSelector((state) => state.user.curruentUser);
     const userStatus = useSelector((state) => state.user.isLogin);
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
-        if(!curruentUser?.email){
-            const getProfile = async () => {
-                const response = await fetch('http://localhost:8000/auth/profile', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                if (!response.ok) return;
-                const datas = await response.json();
-                return datas;
-            }
-    
-            getProfile()
-                .then((res) => {
-                    if (res && res.user) {
-                        dispatch(setUser(res.user));
-                        dispatch(setUserStatus(true));
-                    }
-                })
-                .catch(console.error);
+        // 쿼리 파라미터에서 accessToken 가져오기
+        const accessToken = searchParams.get('accessToken');
+        console.log('Access Token:', accessToken); // 콘솔에 토큰 출력
+
+        // accessToken이 있으면 localStorage에 저장
+        if (accessToken) {
+            localStorage.setItem('accessToken', accessToken);
+
+            // URL에서 쿼리 파라미터를 제거하기 위해 페이지를 다시 리다이렉트
+            navigate('/my', { replace: true }); // URL을 깔끔하게
         }
-
-    }, [curruentUser, dispatch]);
+    }, [searchParams, navigate]);
     
-
-    // 로그아웃
-    const handleLogout = async () => {
-        try {
-          const response = await fetch('http://localhost:8000/auth/logout', {
-            method: 'GET',
-            credentials: 'include', // 세션 쿠키를 전송
-          });
+    // 세션 로그아웃
+    // const handleLogout = async () => {
+    //     try {
+    //       const response = await fetch('http://localhost:8000/auth/logout', {
+    //         method: 'GET',
+    //         credentials: 'include', // 세션 쿠키를 전송
+    //       });
       
-          if (response.ok) {
-            // 로그아웃 성공 시 로컬 스토리지 비우고 페이지 리디렉션
-            localStorage.removeItem('accessToken');
-            window.location.href = '/'; // 홈 페이지로 리디렉션
-          } else {
-            console.error('로그아웃 실패');
-          }
-        } catch (error) {
-          console.error('로그아웃 에러:', error);
-        }
-      };
-
+    //       if (response.ok) {
+    //         // 로그아웃 성공 시 로컬 스토리지 비우고 페이지 리디렉션
+    //         localStorage.removeItem('accessToken');
+    //         window.location.href = '/'; // 홈 페이지로 리디렉션
+    //       } else {
+    //         console.error('로그아웃 실패');
+    //       }
+    //     } catch (error) {
+    //       console.error('로그아웃 에러:', error);
+    //     }
+    //   };
 
     // 프로필
     const pictureRef = useRef(null);
@@ -103,7 +91,6 @@ const MyPage = () => {
     if (!userStatus) {
         return <Navigate to={previousUrl ? previousUrl : "/"} replace={true} />
     }
-
     
     // 로그인이 되어있다면 페이지를 렌더링
     return (
@@ -120,7 +107,12 @@ const MyPage = () => {
                 />
                 <S.Button onClick={savePicture} >프로필 이미지 변경</S.Button>
             </S.Wrapper>
-            <button onClick={handleLogout}>로그아웃</button>
+            <button onClick={() => { 
+                localStorage.removeItem("accessToken")
+                navigate("/")
+                dispatch(setUser(null));
+                dispatch(setUserStatus(false))
+             }}>로그아웃</button>
         </div>
     );
 };
