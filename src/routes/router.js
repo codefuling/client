@@ -11,6 +11,7 @@ import Detail from "../pages/payment/Detail";
 import Success from "../pages/payment/Success";
 import Failed from "../pages/payment/Failed";
 import PaymentContrainer from "../pages/payment/PaymentContrainer";
+import Message from "../pages/message/Message";
 
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: '/signUp',
                 element: <SignUp />
+            },
+            {
+                path: '/message',
+                element: <Message />
             },
             {
                 path: '/payment',

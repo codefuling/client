@@ -44,25 +44,21 @@ const SignIn = () => {
                     password : data.password
                 })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    // 응답이 정상적이지 않은 경우 에러 메시지를 처리
+                    throw new Error(res.message || '로그인에 실패했습니다.');
+                }
+                return res.json()
+            })
             .then((res) => {
-                let {accessToken, user} = res;
-                dispatch(setUser(user))
-                dispatch(setUserStatus(true))
-                localStorage.setItem("accessToken", res.accessToken);
+                // 성공적인 경우
+                const { accessToken, user } = res;
+                dispatch(setUser(user));
+                dispatch(setUserStatus(true));
+                localStorage.setItem("accessToken", accessToken);
             })
             .catch(console.error)
-
-            // 로그인 후 접속하는 페이지들은 토큰을 심어서 접근
-            // await fetch('http://localhost:8000/auth/local', {
-            //     method : 'POST',
-            //     headers : {
-            //         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            //     }
-            // })
-            // .then((res) => res.json())
-            // .then(console.log)
-            // .catch()
 
             })}>
 

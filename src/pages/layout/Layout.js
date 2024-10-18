@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
 import S from './style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faSearch, faBell, faUser, faCreditCard} from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faSearch, faBell, faUser, faCreditCard, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { setPreviousUrl, setUser, setUserStatus } from '../../modules/user';
 
@@ -44,9 +44,9 @@ const Layout = () => {
                         <FontAwesomeIcon icon={faCreditCard} className="icon"/>
                         <p>결제</p>
                     </NavLink>
-                    <NavLink to={"/notice"}>
-                        <FontAwesomeIcon icon={faBell} className="icon"/>
-                        <p>알림</p>
+                    <NavLink to={"/message"}>
+                        <FontAwesomeIcon icon={faPaperPlane} className="icon"/>
+                        <p>쪽지</p>
                     </NavLink>
                     <NavLink to={"/my"}>
                         <FontAwesomeIcon icon={faUser} className="icon"/>

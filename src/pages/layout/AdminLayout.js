@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink, Outlet, useParams } from 'react-router-dom';
 import S from './style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faSearch, faBell, faUser} from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faSearch, faBell, faUser, faCreditCard, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 
 
 const AdminLayout = () => {
@@ -24,13 +24,13 @@ const AdminLayout = () => {
                         />
                         <p>피드</p>
                     </NavLink>
-                    <NavLink to={"/search"}>
-                        <FontAwesomeIcon icon={faSearch} className="icon"/>
-                        <p>검색</p>
+                    <NavLink to={"/payment"}>
+                        <FontAwesomeIcon icon={faCreditCard} className="icon"/>
+                        <p>결제</p>
                     </NavLink>
-                    <NavLink to={"/notice"}>
-                        <FontAwesomeIcon icon={faBell} className="icon"/>
-                        <p>알림</p>
+                    <NavLink to={"/message"}>
+                        <FontAwesomeIcon icon={faPaperPlane} className="icon"/>
+                        <p>쪽지</p>
                     </NavLink>
                     <NavLink to={"/my"}>
                         <FontAwesomeIcon icon={faUser} className="icon"/>
