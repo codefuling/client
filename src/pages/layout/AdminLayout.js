@@ -28,9 +28,9 @@ const AdminLayout = () => {
                         <FontAwesomeIcon icon={faCreditCard} className="icon"/>
                         <p>결제</p>
                     </NavLink>
-                    <NavLink to={"/message"}>
+                    <NavLink to={"/chat"}>
                         <FontAwesomeIcon icon={faPaperPlane} className="icon"/>
-                        <p>쪽지</p>
+                        <p>채팅</p>
                     </NavLink>
                     <NavLink to={"/my"}>
                         <FontAwesomeIcon icon={faUser} className="icon"/>

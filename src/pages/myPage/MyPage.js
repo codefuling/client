@@ -1,118 +1,101 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setUser, setUserStatus } from '../../modules/user';
 import S from './style';
 
 const MyPage = () => {
-    
     const [searchParams] = useSearchParams();
-
-    const previousUrl = useSelector((state) => state.user.previousUrl );
-    const curruentUser = useSelector((state) => state.user.curruentUser);
-    const userStatus = useSelector((state) => state.user.isLogin);
+    const { curruentUser, userStatus, picture, picturePath } = useSelector((state) => state.user.curruentUser);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // 쿼리 파라미터에서 accessToken 가져오기
         const accessToken = searchParams.get('accessToken');
-        console.log('Access Token:', accessToken); // 콘솔에 토큰 출력
-
-        // accessToken이 있으면 localStorage에 저장
         if (accessToken) {
             localStorage.setItem('accessToken', accessToken);
+            navigate('/my', { replace: true });
+        }
 
-            // URL에서 쿼리 파라미터를 제거하기 위해 페이지를 다시 리다이렉트
-            navigate('/my', { replace: true }); // URL을 깔끔하게
+        const localToken = localStorage.getItem('accessToken');
+        if (!localToken) {
+            navigate('/signIn');
         }
     }, [searchParams, navigate]);
-    
-    // 세션 로그아웃
-    // const handleLogout = async () => {
-    //     try {
-    //       const response = await fetch('http://localhost:8000/auth/logout', {
-    //         method: 'GET',
-    //         credentials: 'include', // 세션 쿠키를 전송
-    //       });
-      
-    //       if (response.ok) {
-    //         // 로그아웃 성공 시 로컬 스토리지 비우고 페이지 리디렉션
-    //         localStorage.removeItem('accessToken');
-    //         window.location.href = '/'; // 홈 페이지로 리디렉션
-    //       } else {
-    //         console.error('로그아웃 실패');
-    //       }
-    //     } catch (error) {
-    //       console.error('로그아웃 에러:', error);
-    //     }
-    //   };
 
-    // 프로필
-    const pictureRef = useRef(null);
-    const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 저장
-    const [picturePath, setPicturePath] = useState("http://localhost:8000/uploads/profiles/member.jpg");
-    
-    // 파일이 선택되었을 때 처리하는 함수 (서버로는 요청하지 않음)
-    const handleFileChange = (event) => {
-      const file = event.target.files[0]; // 선택한 파일
-  
-      if (file) {
-        setSelectedFile(file); // 선택된 파일 저장
-        const fileURL = URL.createObjectURL(file); // 브라우저에서 미리 보기용 URL 생성
-        setPicturePath(fileURL); // 리액트에서 미리 보기 이미지 경로 업데이트
-      }
+    // 썸네일 이미지 상태
+    const [imageSrc, setImageSrc] = useState(null);
+    const [thumbnail, setThumbnail] = useState(null);  // 선택한 파일을 저장할 상태
+
+    // 파일 선택 시 실행되는 함수
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onloadend = () => {
+                setImageSrc(reader.result);
+            };
+
+            reader.readAsDataURL(file);
+            setThumbnail(file);  // 🔹 선택한 파일을 상태에 저장
+        }
     };
 
-    const savePicture = async (e) => {
+    // 파일 업로드 함수
+    const handleThumbnailUpload = async () => {
+        if (!thumbnail) {
+            alert("파일을 선택해주세요!");
+            return;
+        }
+
         const formData = new FormData();
-        formData.append('picture', pictureRef.current.files[0]);
-        console.log(pictureRef.current.files[0])
+        formData.append('images', thumbnail);  // 🔹 선택한 파일 추가
+        try {
+            const response = await fetch(process.env.REACT_APP_BACKEND_URL+'/images/thumbnail', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                },
+                body: formData,
+            });
 
-        const config = {
-            method : "POST",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-            body: formData
-        };
+            if (response.ok) {
+                const data = await response.json();
+                console.log('이미지 업로드 성공:', data);
+            } else {
+                console.error('이미지 업로드 실패');
+            }
+        } catch (error) {
+            console.error('업로드 중 오류 발생:', error);
+        }
+    };
 
-        await fetch("http://localhost:8000/user/picture", config)
-            .then((res) => res.json())
-            .then((res) => {
-                console.log(res)
-                const newPicturePath = res.filePath
-                setPicturePath(`http://localhost:8000${newPicturePath}`)
-            })
-            .catch(console.error);
-    }
-
-    // 로그인이 안된 상태에서 MyPage 접근 방지
-    if (!userStatus) {
-        return <Navigate to={previousUrl ? previousUrl : "/"} replace={true} />
-    }
-    
-    // 로그인이 되어있다면 페이지를 렌더링
     return (
         <div>
             관리자 페이지
             <S.Wrapper>
                 <S.Label htmlFor="profile">
-                    <S.Profile src={picturePath} alt="프로필 이미지" />
+                    {imageSrc ? (
+                        <S.Profile alt="프로필 이미지" src={imageSrc} />
+                    ) : (
+                        <S.Profile alt="프로필 이미지" src={process.env.REACT_APP_BACKEND_URL + `/${picturePath}/${picture}`} />
+                    )}
                 </S.Label>
                 <input 
-                    id="profile" style={{display : "none"}} 
-                    ref={pictureRef} type="file" name="picture"
-                    onChange={handleFileChange}
+                    id="profile"
+                    style={{ display: "none" }}
+                    type="file"
+                    onChange={handleImageChange}
                 />
-                <S.Button onClick={savePicture} >프로필 이미지 변경</S.Button>
+                <S.Button onClick={handleThumbnailUpload}>프로필 이미지 변경</S.Button>
             </S.Wrapper>
             <button onClick={() => { 
-                localStorage.removeItem("accessToken")
-                navigate("/")
+                localStorage.removeItem("accessToken");
+                navigate("/");
                 dispatch(setUser(null));
-                dispatch(setUserStatus(false))
-             }}>로그아웃</button>
+                dispatch(setUserStatus(false));
+            }}>로그아웃</button>
         </div>
     );
 };

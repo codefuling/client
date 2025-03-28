@@ -19,7 +19,6 @@ const SignUp = () => {
     return (
         <S.Form onSubmit={handleSubmit(async (data)=>{
 
-             console.log(data)
              await fetch('http://localhost:8000/user/register', {
                 method : 'POST',
                 headers : {
@@ -32,12 +31,16 @@ const SignUp = () => {
             })
             .then(res => res.json())
             .then(res => {
-                if(res.registerSuccess){
+                console.log(res)
+                if(!res.registerSuccess){
                     alert(res.message)
+                    return;
+                }else{
+                    alert(res.message)
+                    navigate('/')
                 }
-                // 리다이렉트
-                navigate('/signIn')
             })
+            .catch(console.error)
 
         })}>
 

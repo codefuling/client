@@ -1,27 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from '../../components/input/style';
 import { useForm } from 'react-hook-form'
 import BasicButton from '../../components/button/BasicButton';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import S from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setUserStatus } from '../../modules/user';
 
 // 리엑트 use-hook-form
 const SignIn = () => {
-
-    const { register, handleSubmit, getValues, formState: {isSubmiitng, isSubmitted, errors}} = useForm({ mode: "onChange" });
+    
+    const { register, handleSubmit, formState: {isSubmiitng, errors}} = useForm({ mode: "onChange" });
 
     //[] 바깥 ^는 문자열 처음을 의미
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
+    const navigate = useNavigate()
+
+    // 로그인 실패처리
+    const [isIntegrated, setIsIntegrated] = useState(false);
+    const [searchParams] = useSearchParams()
+    const failMessage = searchParams.get('message');
+
+    useEffect(() => {
+        if (failMessage) {
+            if (window.confirm(`${failMessage}\n 연동하시겠습니까?`)) {
+                console.log("연동");
+                fetch('http://localhost:8000/auth/integrate', {
+                    method: 'GET',
+                    credentials: 'include',
+                })
+                .then((res) => res.json())
+                .then((res) => {
+                    alert(res.message + `\n 다시 로그인해주세요.`)
+                    navigate("/signIn")
+                    return
+                });
+            } else {
+                console.log("연동 안함");
+            }
+        }
+    }, [failMessage]);
 
     // 로그인 이후에 보여줘야할 때
     const curruentUser = useSelector((state) => state.user.curruentUser);
     const userStatus = useSelector((state) => state.user.isLogin);
     const dispatch = useDispatch()
-    console.log(curruentUser, userStatus)
-    
+
     // 로그인에 성공해서 리랜더링 시켜줘야한다.
     if(userStatus){
         return (

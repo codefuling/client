@@ -11,7 +11,7 @@ import Detail from "../pages/payment/Detail";
 import Success from "../pages/payment/Success";
 import Failed from "../pages/payment/Failed";
 import PaymentContrainer from "../pages/payment/PaymentContrainer";
-import Message from "../pages/message/Message";
+import Chat from "../pages/chat/Chat";
 
 
 const router = createBrowserRouter([
@@ -32,12 +32,12 @@ const router = createBrowserRouter([
                 element: <SignIn />
             },
             {
-                path: '/signUp',
-                element: <SignUp />
+                path: '/chat',
+                element: <Chat />
             },
             {
-                path: '/message',
-                element: <Message />
+                path: '/signUp',
+                element: <SignUp />
             },
             {
                 path: '/payment',

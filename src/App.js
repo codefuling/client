@@ -1,11 +1,9 @@
 import './App.css';
 import { RouterProvider } from 'react-router-dom';
 import router from './routes/router';
-
 import GlobalStyle from './global/global';
 import { ThemeProvider } from 'styled-components';
 import theme from './global/theme';
-
 import { useEffect } from 'react';
 import { setUser, setUserStatus } from './modules/user';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +18,6 @@ function App() {
   const userStatus = useSelector((state) => state.user.isLogin);
   const dispatch = useDispatch()
 
-  
     useEffect(() => {
       if(localStorage.getItem('accessToken')){
 
@@ -40,7 +37,6 @@ function App() {
     
         isAuthenticate()
           .then((res) => {
-            console.log('마운트', res)
             let {message, user} = res;
             dispatch(setUser(user))
             dispatch(setUserStatus(true))
