@@ -55,17 +55,6 @@ const Chat = () => {
 
     return (
         <div>
-            <h2>모든 사용자 채팅</h2>
-            <div>
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="메시지 입력"
-                />
-                <button onClick={handleSendMessage}>모든 사용자에게 보내기</button>
-            </div>
-            
             <div>
                 <h3>1:1 채팅</h3>
                 <input
@@ -81,6 +70,9 @@ const Chat = () => {
                     placeholder="메시지 입력"
                 />
                 <button onClick={handleSendPrivateMessage}>1:1 메시지 보내기</button>
+            </div>
+            <div>
+                <button onClick={handleSendMessage}>모든 사용자에게 보내기</button>
             </div>
 
             <div>
